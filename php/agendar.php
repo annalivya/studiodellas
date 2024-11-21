@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // recebe os dados do formulário
+    // aqui vai receber os dados do formulário
     $nome = $_POST['nome'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
-    // conecta ao banco de dados
+    // conectar com o banco de dados
     $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
 
     // verifica a conexão
@@ -16,41 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Falha na conexão: " . $conexao->connect_error);
     }
 
-    // prepara e executa a consulta SQL
+    // preparar e executar a consulta SQL
     $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, servicos, data, horario) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $nome, $telefone, $email, $servicos, $data, $horario);
 
-    $mensagem = "";
     if ($stmt->execute()) {
-        $mensagem = "<h2>Agendamento realizado com sucesso!</h2>
-                     <p>Detalhes do agendamento:</p>
-                     <ul>
-                         <li><strong>Serviço:</strong> $servicos</li>
-                         <li><strong>Data:</strong> $data</li>
-                         <li><strong>Horário:</strong> $horario</li>
-                     </ul>";
+        $mensagem = "Agendamento realizado com sucesso!<br>";
+        $mensagem .= "Serviço(s): $servicos<br>";
+        $mensagem .= "Data: $data<br>";
+        $mensagem .= "Horário: $horario<br>";
     } else {
-        $mensagem = "<p>Erro ao realizar o agendamento: " . $stmt->error . "</p>";
+        $mensagem = "Erro ao realizar o agendamento: " . $stmt->error;
     }
 
-    // fecha a consulta
+    // fechar a consulta e a conexão
     $stmt->close();
-
-    // lista os agendamentos do cliente
-    $agendamentos_cliente = "";
-    $resultado = $conexao->query("SELECT servicos, data, horario FROM agendamentos WHERE email = '$email'");
-    if ($resultado->num_rows > 0) {
-        $agendamentos_cliente = "<h2>Seus Agendamentos:</h2>";
-        while ($row = $resultado->fetch_assoc()) {
-            $agendamentos_cliente .= "<p><strong>Serviço:</strong> " . $row['servicos'] . " | 
-                                      <strong>Data:</strong> " . $row['data'] . " | 
-                                      <strong>Horário:</strong> " . $row['horario'] . "</p>";
-        }
-    } else {
-        $agendamentos_cliente = "<p>Você ainda não tem agendamentos anteriores.</p>";
-    }
-
-    // fecha a conexão
     $conexao->close();
 }
 ?>
@@ -67,6 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <header>
         <h1>Agende seu serviço no Studio D'ellas</h1>
     </header>
+
+    <?php if (isset($mensagem)): ?>
+        <div class="mensagem-confirmacao">
+            <h2>Confirmação de Agendamento</h2>
+            <p><?php echo $mensagem; ?></p>
+            <a href="visualizar_agendamentos.php">Visualizar meus agendamentos</a>
+        </div>
+    <?php endif; ?>
 
     <form action="agendar.php" method="POST">
         <label for="nome">Nome:</label>
@@ -95,15 +83,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button type="submit" name="submit">Agendar</button>
     </form>
-
-    <?php 
-    // serve para exibir a mensagem de confirmação e os agendamentos do cliente
-    if (isset($mensagem)) {
-        echo $mensagem;
-    }
-    if (isset($agendamentos_cliente)) {
-        echo $agendamentos_cliente;
-    }
-    ?>
 </body>
 </html>
