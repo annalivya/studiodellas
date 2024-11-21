@@ -1,32 +1,43 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validação simples dos dados
+    // validação dos dados
     $nome = trim($_POST['nome'] ?? '');
     $telefone = trim($_POST['telefone'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $servicos = isset($_POST['servicos']) ? implode(', ', $_POST['servicos']) : '';
+    $servicos = $_POST['servicos'] ?? [];
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
     if ($nome && $telefone && $email && $servicos && $data && $horario) {
-        // Conectar com o banco de dados
+        // conectar com o banco de dados
         $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
 
         if ($conexao->connect_error) {
             die("Falha na conexão: " . $conexao->connect_error);
         }
 
-        // Preparar e executar a consulta SQL
-        $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, servicos, data, horario) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $nome, $telefone, $email, $servicos, $data, $horario);
+        // preparar e executar a consulta SQL para inserir o agendamento
+        $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $nome, $telefone, $email, $data, $horario);
 
         if ($stmt->execute()) {
+            // pega o ID do agendamento inserido
+            $agendamento_id = $stmt->insert_id;
+
+            // para associar os serviços selecionados a tabela agendamentos_servicos
+            $stmt_servicos = $conexao->prepare("INSERT INTO agendamentos_servicos (agendamento_id, servico_id) VALUES (?, ?)");
+
+            foreach ($servicos as $servico_id) {
+                $stmt_servicos->bind_param("ii", $agendamento_id, $servico_id);
+                $stmt_servicos->execute();
+            }
+
             echo "Agendamento realizado com sucesso!";
         } else {
             echo "Erro ao realizar o agendamento: " . $stmt->error;
         }
 
-        // Fechar a consulta e a conexão
+        // fechar a consulta e a conexão
         $stmt->close();
         $conexao->close();
     } else {
@@ -34,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -63,11 +73,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="servicos">Escolha os serviços:</label>
         <select name="servicos[]" id="servicos" multiple required>
-            <option value="unhas">Unhas</option>
-            <option value="cabelo">Cabelo</option>
-            <option value="sobrancelha">Sobrancelha</option>
-            <option value="cilios">Cílios</option>
-            <option value="limpeza_pele">Limpeza de Pele</option>
+            <?php
+            // conectar ao banco para buscar os serviços disponíveis
+            $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
+            if ($conexao->connect_error) {
+                die("Falha na conexão: " . $conexao->connect_error);
+            }
+
+            // obter todos os serviços disponíveis
+            $result = $conexao->query("SELECT id, nome FROM servicos");
+            while ($servico = $result->fetch_assoc()) {
+                echo "<option value='" . $servico['id'] . "'>" . $servico['nome'] . "</option>";
+            }
+
+            // fechar a conexão após o uso
+            $conexao->close();
+            ?>
         </select>
 
         <label for="data">Data:</label>
