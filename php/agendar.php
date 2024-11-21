@@ -1,32 +1,42 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // aqui vai receber os dados do formulário
+    // recebe os dados do formulário
     $nome = $_POST['nome'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
     $email = $_POST['email'] ?? '';
-    $servicos = isset($_POST['servicos']) ? implode(', ', $_POST['servicos']) : '';
+    $servicos = $_POST['servicos'] ?? []; // Array com os IDs dos serviços
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
     // conectar com o banco de dados
     $conexao = new mysqli('localhost', 'root', '', 'studio_dellas_novo');
 
-    // verifica a conexão
     if ($conexao->connect_error) {
         die("Falha na conexão: " . $conexao->connect_error);
     }
 
-    // preparar e executar a consulta SQL
-    $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, servicos, data, horario) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $nome, $telefone, $email, $servicos, $data, $horario);
+    // inserir dados do agendamento
+    $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $nome, $telefone, $email, $data, $horario);
 
     if ($stmt->execute()) {
-        $mensagem = "Agendamento realizado com sucesso!<br>";
-        $mensagem .= "Serviço(s): $servicos<br>";
-        $mensagem .= "Data: $data<br>";
-        $mensagem .= "Horário: $horario<br>";
+        $agendamento_id = $stmt->insert_id; // Pega o ID do agendamento inserido
+
+        // inserir serviços escolhidos
+        foreach ($servicos as $servico_id) {
+            $stmt_servico = $conexao->prepare("INSERT INTO agendamentos_servicos (agendamento_id, servico_id) VALUES (?, ?)");
+            $stmt_servico->bind_param("ii", $agendamento_id, $servico_id);
+            $stmt_servico->execute();
+            $stmt_servico->close();
+        }
+
+        // mensagem de confirmação
+        echo "Agendamento realizado com sucesso!<br>";
+        echo "Serviços: " . implode(", ", $servicos) . "<br>";
+        echo "Data: " . $data . "<br>";
+        echo "Horário: " . $horario . "<br>";
     } else {
-        $mensagem = "Erro ao realizar o agendamento: " . $stmt->error;
+        echo "Erro ao realizar o agendamento: " . $stmt->error;
     }
 
     // fechar a consulta e a conexão
@@ -48,14 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h1>Agende seu serviço no Studio D'ellas</h1>
     </header>
 
-    <?php if (isset($mensagem)): ?>
-        <div class="mensagem-confirmacao">
-            <h2>Confirmação de Agendamento</h2>
-            <p><?php echo $mensagem; ?></p>
-            <a href="visualizar_agendamentos.php">Visualizar meus agendamentos</a>
-        </div>
-    <?php endif; ?>
-
     <form action="agendar.php" method="POST">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required>
@@ -68,11 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="servicos">Escolha os serviços:</label>
         <select name="servicos[]" id="servicos" multiple required>
-            <option value="unhas">Unhas</option>
-            <option value="cabelo">Cabelo</option>
-            <option value="sobrancelha">Sobrancelha</option>
-            <option value="cilios">Cílios</option>
-            <option value="limpeza_pele">Limpeza de Pele</option>
+            <option value="1">Unhas</option>
+            <option value="2">Cabelo</option>
+            <option value="3">Sobrancelha</option>
+            <option value="4">Cílios</option>
+            <option value="5">Limpeza de Pele</option>
         </select>
 
         <label for="data">Data:</label>
