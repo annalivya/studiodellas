@@ -1,48 +1,57 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // validação dos dados
-    $nome = trim($_POST['nome'] ?? '');
-    $telefone = trim($_POST['telefone'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $servicos = $_POST['servicos'] ?? [];
+    // recebe os dados do formulário
+    $nome = $_POST['nome'] ?? '';
+    $telefone = $_POST['telefone'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $servicos = isset($_POST['servicos']) ? implode(', ', $_POST['servicos']) : '';
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
-    if ($nome && $telefone && $email && $servicos && $data && $horario) {
-        // conectar com o banco de dados
-        $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
+    // conecta ao banco de dados
+    $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
 
-        if ($conexao->connect_error) {
-            die("Falha na conexão: " . $conexao->connect_error);
-        }
-
-        // preparar e executar a consulta SQL para inserir o agendamento
-        $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $nome, $telefone, $email, $data, $horario);
-
-        if ($stmt->execute()) {
-            // pega o ID do agendamento inserido
-            $agendamento_id = $stmt->insert_id;
-
-            // para associar os serviços selecionados a tabela agendamentos_servicos
-            $stmt_servicos = $conexao->prepare("INSERT INTO agendamentos_servicos (agendamento_id, servico_id) VALUES (?, ?)");
-
-            foreach ($servicos as $servico_id) {
-                $stmt_servicos->bind_param("ii", $agendamento_id, $servico_id);
-                $stmt_servicos->execute();
-            }
-
-            echo "Agendamento realizado com sucesso!";
-        } else {
-            echo "Erro ao realizar o agendamento: " . $stmt->error;
-        }
-
-        // fechar a consulta e a conexão
-        $stmt->close();
-        $conexao->close();
-    } else {
-        echo "Todos os campos são obrigatórios.";
+    // verifica a conexão
+    if ($conexao->connect_error) {
+        die("Falha na conexão: " . $conexao->connect_error);
     }
+
+    // prepara e executa a consulta SQL
+    $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, servicos, data, horario) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $nome, $telefone, $email, $servicos, $data, $horario);
+
+    $mensagem = "";
+    if ($stmt->execute()) {
+        $mensagem = "<h2>Agendamento realizado com sucesso!</h2>
+                     <p>Detalhes do agendamento:</p>
+                     <ul>
+                         <li><strong>Serviço:</strong> $servicos</li>
+                         <li><strong>Data:</strong> $data</li>
+                         <li><strong>Horário:</strong> $horario</li>
+                     </ul>";
+    } else {
+        $mensagem = "<p>Erro ao realizar o agendamento: " . $stmt->error . "</p>";
+    }
+
+    // fecha a consulta
+    $stmt->close();
+
+    // lista os agendamentos do cliente
+    $agendamentos_cliente = "";
+    $resultado = $conexao->query("SELECT servicos, data, horario FROM agendamentos WHERE email = '$email'");
+    if ($resultado->num_rows > 0) {
+        $agendamentos_cliente = "<h2>Seus Agendamentos:</h2>";
+        while ($row = $resultado->fetch_assoc()) {
+            $agendamentos_cliente .= "<p><strong>Serviço:</strong> " . $row['servicos'] . " | 
+                                      <strong>Data:</strong> " . $row['data'] . " | 
+                                      <strong>Horário:</strong> " . $row['horario'] . "</p>";
+        }
+    } else {
+        $agendamentos_cliente = "<p>Você ainda não tem agendamentos anteriores.</p>";
+    }
+
+    // fecha a conexão
+    $conexao->close();
 }
 ?>
 
@@ -55,8 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <script src="../js/script.js"></script>
-
     <header>
         <h1>Agende seu serviço no Studio D'ellas</h1>
     </header>
@@ -73,22 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="servicos">Escolha os serviços:</label>
         <select name="servicos[]" id="servicos" multiple required>
-            <?php
-            // conectar ao banco para buscar os serviços disponíveis
-            $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
-            if ($conexao->connect_error) {
-                die("Falha na conexão: " . $conexao->connect_error);
-            }
-
-            // obter todos os serviços disponíveis
-            $result = $conexao->query("SELECT id, nome FROM servicos");
-            while ($servico = $result->fetch_assoc()) {
-                echo "<option value='" . $servico['id'] . "'>" . $servico['nome'] . "</option>";
-            }
-
-            // fechar a conexão após o uso
-            $conexao->close();
-            ?>
+            <option value="unhas">Unhas</option>
+            <option value="cabelo">Cabelo</option>
+            <option value="sobrancelha">Sobrancelha</option>
+            <option value="cilios">Cílios</option>
+            <option value="limpeza_pele">Limpeza de Pele</option>
         </select>
 
         <label for="data">Data:</label>
@@ -99,5 +95,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button type="submit" name="submit">Agendar</button>
     </form>
+
+    <?php 
+    // serve para exibir a mensagem de confirmação e os agendamentos do cliente
+    if (isset($mensagem)) {
+        echo $mensagem;
+    }
+    if (isset($agendamentos_cliente)) {
+        echo $agendamentos_cliente;
+    }
+    ?>
 </body>
 </html>
