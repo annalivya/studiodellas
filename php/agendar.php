@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $horario = $_POST['horario'] ?? '';
 
     // conectar com o banco de dados
-    $conexao = new mysqli('localhost', 'root', '', 'studio_dellas');
+    $conexao = new mysqli('localhost', 'root', '', 'studio_dellas_novo');
 
     // verifica a conexão
     if ($conexao->connect_error) {
