@@ -8,19 +8,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
+    // Verifica se pelo menos um serviço foi selecionado
+    if (empty($servicos)) {
+        echo "Por favor, selecione pelo menos um serviço.";
+        exit;
+    }
+
     // Definir os preços dos serviços
     $precos_servicos = [
         1 => 30.00, // Preço das Unhas
         2 => 80.00, // Preço do Cabelo
         3 => 50.00, // Preço das Sobrancelha
         4 => 100.00, // Preço dos Cílios
-        5 => 120.00 // Preço daLimpeza de Pele
+        5 => 120.00 // Preço da Limpeza de Pele
     ];
 
     // Calcular o valor total
     $total = 0;
     foreach ($servicos as $servico_id) {
-        $total += $precos_servicos[$servico_id];
+        if (isset($precos_servicos[$servico_id])) {
+            $total += $precos_servicos[$servico_id];
+        }
     }
 
     // Conectar com o banco de dados
