@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <header>
+    <header class="header-agendamento">
         <h1>Agende seu serviço no Studio D'ellas</h1>
     </header>
 
