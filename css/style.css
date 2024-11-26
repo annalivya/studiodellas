@@ -69,6 +69,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.header-agendamento h1 {
+    color: #ffffff; /* Muda a cor do h1 dentro do header */
+}
+
 /* Estilizando os formulários */
 form {
     background-color: #fff;
