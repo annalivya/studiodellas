@@ -69,13 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="email" id="email" name="email" required>
 
         <label for="servicos">Escolha os serviços:</label>
-        <select name="servicos[]" id="servicos" multiple required>
-            <option value="1">Unhas</option>
-            <option value="2">Cabelo</option>
-            <option value="3">Sobrancelha</option>
-            <option value="4">Cílios</option>
-            <option value="5">Limpeza de Pele</option>
-        </select>
+        <div id="servicos">
+            <label><input type="checkbox" name="servicos[]" value="1"> Unhas</label><br>
+            <label><input type="checkbox" name="servicos[]" value="2"> Cabelo</label><br>
+            <label><input type="checkbox" name="servicos[]" value="3"> Sobrancelha</label><br>
+            <label><input type="checkbox" name="servicos[]" value="4"> Cílios</label><br>
+            <label><input type="checkbox" name="servicos[]" value="5"> Limpeza de Pele</label><br>
+        </div>
 
         <label for="data">Data:</label>
         <input type="date" id="data" name="data" required>
