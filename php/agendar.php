@@ -1,28 +1,28 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // recebe os dados do formulário
+    // Recebe os dados do formulário
     $nome = $_POST['nome'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
     $email = $_POST['email'] ?? '';
-    $servicos = $_POST['servicos'] ?? []; // Array com os IDs dos serviços
+    $servicos = $_POST['servicos'] ?? []; // Array com os IDs dos serviços selecionados
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
-    // conectar com o banco de dados
+    // Conectar com o banco de dados
     $conexao = new mysqli('localhost', 'root', '', 'studio_dellas_novo');
 
     if ($conexao->connect_error) {
         die("Falha na conexão: " . $conexao->connect_error);
     }
 
-    // inserir dados do agendamento
+    // Inserir dados do agendamento
     $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $nome, $telefone, $email, $data, $horario);
 
     if ($stmt->execute()) {
         $agendamento_id = $stmt->insert_id; // Pega o ID do agendamento inserido
 
-        // inserir serviços escolhidos
+        // Inserir os serviços escolhidos
         foreach ($servicos as $servico_id) {
             $stmt_servico = $conexao->prepare("INSERT INTO agendamentos_servicos (agendamento_id, servico_id) VALUES (?, ?)");
             $stmt_servico->bind_param("ii", $agendamento_id, $servico_id);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt_servico->close();
         }
 
-        // mensagem de confirmação
+        // Mensagem de confirmação
         echo "Agendamento realizado com sucesso!<br>";
         echo "Serviços: " . implode(", ", $servicos) . "<br>";
         echo "Data: " . $data . "<br>";
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Erro ao realizar o agendamento: " . $stmt->error;
     }
 
-    // fechar a consulta e a conexão
+    // Fechar a consulta e a conexão
     $stmt->close();
     $conexao->close();
 }
