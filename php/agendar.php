@@ -79,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <header class="header-agendamento">
-        <h1>Agende seu serviço no Studio D'ellas</h1>
+        <h1>Agende abaixo o seu horário online</h1>
+        <p>Basta preencher os campos e garantir o seu atendimento!</p>
     </header>
 
     <form action="agendar.php" method="POST">
