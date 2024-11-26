@@ -7,14 +7,14 @@
 
 /* Cor de fundo e fonte padrão */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: sans-serif;
     background-color: #f9f9f9;
     color: #333;
 }
 
 /* Estilos do cabeçalho */
 header {
-    background-color: #D5006D;  /* Rosa fúcsia */
+    background-color: #F112EF;  
     color: #fff;
     padding: 20px;
     text-align: center;
@@ -59,7 +59,7 @@ section:hover {
 }
 
 h1 {
-    color: #D5006D;  /* Rosa fúcsia */
+    color: #F112EF;  
     font-size: 28px;
     margin-bottom: 20px;
 }
@@ -92,12 +92,12 @@ form input, form select, form button {
 }
 
 form input:focus, form select:focus, form button:focus {
-    border-color: #D5006D;  /* Rosa fúcsia */
+    border-color: #F112EF; 
     outline: none;
 }
 
 form button {
-    background-color: #D5006D;
+    background-color: #F112EF;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -122,7 +122,7 @@ ul li {
 footer {
     text-align: center;
     padding: 20px;
-    background-color: #D5006D;
+    background-color: #F112EF;
     color: white;
     position:absolute;
     bottom: 0;
