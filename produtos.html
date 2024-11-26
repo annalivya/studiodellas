@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos - Studio D'ellas</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilo do carrossel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 20px 0;
+            scroll-snap-type: x mandatory;
+            justify-content: center;
+        }
+        .carousel img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 10px;
+            scroll-snap-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .carousel img:hover {
+            transform: scale(1.1);
+        }
+        /* Centralizar o conteúdo da seção */
+        #produtos {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -22,6 +49,52 @@
     <section id="produtos">
         <h1>💎 Produtos de Qualidade 💎</h1>
         <p>Trabalhamos com os melhores produtos para garantir um resultado impecável. 🌿</p>
+
+        <!-- Carrossel de Produtos -->
+        <h2>Confira os Produtos</h2>
+        <div class="carousel">
+            <a href="https://www.lorealprofessionnel.com.br/" target="_blank">
+                <img src="https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:eco,w_1800,c_limit/e_trim/v1/imagens/product/KT002421/b4f2b5dd-d989-4e5f-897d-fb4bb2a0e847-kit-loreal-professionnel-absolut-repair-molecular-4-produtos.png" alt="Produto 1">
+            </a>
+            <a href="https://www.redken.com.br/" target="_blank">
+                <img src="https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:eco,w_800/v1/imagens/products/26915/26915.png" alt="Produto 2">
+            </a>
+            <a href="https://loja.wella.com.br/marca/wella-professionals/" target="_blank">
+                <img src="https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:eco,w_800/v1/imagens/product/20058286/78431b13-0aa1-44d1-bb0e-1473d048a18d-20058286.png" alt="Produto 3">
+            </a>
+            <a href="https://missmalashes.com.br/" target="_blank">
+                <img src="https://miss-lashes.b-cdn.net/media/cb/c7/50/1667814588/ombre-lila.png?width=3000" alt="Produto 4">
+            </a>
+            <a href="https://www.benefitcosmetics.com/pt-br" target="_blank">
+                <img src="https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:best/v1/imagens/product/96097/777e3d71-3934-4041-9d03-a698f9d417cf-benefit-cosmetics-gimme-brow-2-gel-para-sobrancelha-3g.png" alt="Produto 5">
+            </a>
+            <a href="https://www.dermage.com.br/" target="_blank">
+                <img src="https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:eco,w_800/v1/imagens/product/20048243/f8dd61b8-008b-4665-a5c2-9f761ea6e167-dermage-photoage-water-fps50-protetor-solar-40g.png" alt="Produto 6">
+            </a>
+        </div>
+
+        <!-- Carrossel de Marcas -->
+        <h2>Nossas Marcas</h2>
+        <div class="carousel">
+            <a href="https://www.lorealprofessionnel.com.br/" target="_blank">
+                <img src="https://www.colourworlduk.com/wp-content/uploads/2021/06/LOREAL-PROFESSIONNEL-PARIS-LOGO-2021-BLACK.png" alt="L'Oréal Professionnel">
+            </a>
+            <a href="https://www.redken.com.br/" target="_blank">
+                <img src="https://9salonandspa.net/wp-content/uploads/2015/11/redken-logo.png" alt="Redken">
+            </a>
+            <a href="https://loja.wella.com.br/marca/wella-professionals/" target="_blank">
+                <img src="https://logospng.org/download/wella/wella-2048.png" alt="Wella Professionals">
+            </a>
+            <a href="https://missmalashes.com.br/" target="_blank">
+                <img src="https://miss-lashes.b-cdn.net/media/fc/30/3a/1725182192/Miss_Lashes_Original_(1).png?width=3000" alt="Miss Lashes">
+            </a>
+            <a href="https://www.benefitcosmetics.com/pt-br" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Benefit_Cosmetics_logo.png" alt="Benefit Cosmetics">
+            </a>
+            <a href="https://www.dermage.com.br/" target="_blank">
+                <img src="https://c5gwmsmjx1.execute-api.us-east-1.amazonaws.com/prod/dados_processo_seletivo/logo_empresa/137758/LOGO-LARANJA.png_name_20230809-30212-1n58oxb.png" alt="Dermage">
+            </a>
+        </div>
     </section>
 
     <footer>
