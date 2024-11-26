@@ -8,6 +8,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = $_POST['data'] ?? '';
     $horario = $_POST['horario'] ?? '';
 
+    // Definir os preços dos serviços
+    $precos_servicos = [
+        1 => 30.00, // Preço das Unhas
+        2 => 80.00, // Preço do Cabelo
+        3 => 50.00, // Preço das Sobrancelha
+        4 => 100.00, // Preço dos Cílios
+        5 => 120.00 // Preço daLimpeza de Pele
+    ];
+
+    // Calcular o valor total
+    $total = 0;
+    foreach ($servicos as $servico_id) {
+        $total += $precos_servicos[$servico_id];
+    }
+
     // Conectar com o banco de dados
     $conexao = new mysqli('localhost', 'root', '', 'studio_dellas_novo');
 
@@ -16,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Inserir dados do agendamento
-    $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $nome, $telefone, $email, $data, $horario);
+    $stmt = $conexao->prepare("INSERT INTO agendamentos (nome, telefone, email, data, horario, total) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssd", $nome, $telefone, $email, $data, $horario, $total);
 
     if ($stmt->execute()) {
         $agendamento_id = $stmt->insert_id; // Pega o ID do agendamento inserido
@@ -35,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Serviços: " . implode(", ", $servicos) . "<br>";
         echo "Data: " . $data . "<br>";
         echo "Horário: " . $horario . "<br>";
+        echo "Total: R$ " . number_format($total, 2, ',', '.') . "<br>";  // Exibe o valor total
     } else {
         echo "Erro ao realizar o agendamento: " . $stmt->error;
     }
@@ -70,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label for="servicos">Escolha os serviços:</label>
         <div id="servicos">
-            <label><input type="checkbox" name="servicos[]" value="1"> Unhas</label><br>
-            <label><input type="checkbox" name="servicos[]" value="2"> Cabelo</label><br>
-            <label><input type="checkbox" name="servicos[]" value="3"> Sobrancelha</label><br>
-            <label><input type="checkbox" name="servicos[]" value="4"> Cílios</label><br>
-            <label><input type="checkbox" name="servicos[]" value="5"> Limpeza de Pele</label><br>
+            <label><input type="checkbox" name="servicos[]" value="1"> Unhas (R$ 30,00)</label><br>
+            <label><input type="checkbox" name="servicos[]" value="2"> Cabelo (R$ 80,00)</label><br>
+            <label><input type="checkbox" name="servicos[]" value="3"> Sobrancelha (R$ 50,00)</label><br>
+            <label><input type="checkbox" name="servicos[]" value="4"> Cílios (R$ 100,00)</label><br>
+            <label><input type="checkbox" name="servicos[]" value="5"> Limpeza de Pele (R$ 120,00)</label><br>
         </div>
 
         <label for="data">Data:</label>
