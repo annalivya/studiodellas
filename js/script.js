@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Validar data
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0]; // Pega a data atual (sem hora)
         if (!data.value || data.value < today) {
             valid = false;
             showError(data, "Escolha uma data válida no futuro.");
