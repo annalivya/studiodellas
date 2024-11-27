@@ -5,10 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studio D'ellas</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            gap: 30px; /* Espaço entre logo e itens do menu */
+        }
+
+        nav img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            font-size: 20px;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
+            <!-- Adicionando a bolinha com a logo -->
+            <img src="imagens/logostudiodellas.png" alt="Logo do Studio D'ellas">
             <ul>
                 <li><a href="sobre.html">Sobre o Salão</a></li>
                 <li><a href="servicos.html">Serviços</a></li>
