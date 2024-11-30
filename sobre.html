@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre o Studio D'ellas</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .image-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* Espaçamento entre as imagens */
+            margin: 30px 0; /* Espaçamento superior e inferior */
+        }
+        .image-gallery a {
+            display: block;
+            width: 50%; /* Ajuste proporcional */
+            text-decoration: none; /* Remove sublinhado */
+        }
+        .image-gallery img {
+            width: 100%; /* Ocupa o espaço do link */
+            border-radius: 10px; /* Cantos arredondados */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombras para destaque */
+            transition: transform 0.4s ease; /* Efeito de hover */
+        }
+        .image-gallery img:hover {
+            transform: scale(1.05); /* Aumenta a imagem ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -19,8 +41,21 @@
     </header>
 
     <section>
-        <h1>Sobre o Salão Studio D'ellas</h1>
+        <h1>💇‍♀️Sobre o Salão Studio D'ellas💇‍♀️</h1>
         <p>O Studio D'ellas é um salão de beleza moderno e sofisticado, idealizado por Anna Lívya Luna e Júlia Oliveira. <br> Localizado em João Pessoa, o salão é reconhecido pelo atendimento personalizado e por oferecer uma ampla gama de serviços, como tratamentos de cabelo em geral, maquiagem, design de sobrancelhas, manicure e tratamentos estéticos. <br> Com um ambiente acolhedor e profissionais altamente qualificados, o Studio D'ellas é o destino ideal para quem busca beleza, bem-estar e uma experiência única.</p>
+    </section>
+
+    <!-- Galeria de imagens clicáveis -->
+    <section class="image-gallery">
+        <a href="https://exemplo.com/pagina3" target="_blank">
+            <img src="https://images.adsttc.com/media/images/6013/8f0c/f91c/8196/0900/032a/large_jpg/Roby_Salao_Beleza-3776.jpg?1611894531" alt="Foto do salão 3">
+        </a>
+        <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fit.pinterest.com%2Fpin%2F624030092117018227%2F&psig=AOvVaw2rSw5QvhESS2hWcJC-ZpQF&ust=1733016501394000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPjKwNrzgooDFQAAAAAdAAAAABAJ" target="_blank">
+            <img src="https://i.pinimg.com/736x/cb/92/89/cb92892c3a4d27c90852cb24b02c213a.jpg" alt="Foto do salão 1">
+        </a>
+        <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.archdaily.com.br%2Fbr%2F955981%2Fsalao-de-beleza-lushe-beauty-roby-macedo-arquitetura-e-design&psig=AOvVaw2rSw5QvhESS2hWcJC-ZpQF&ust=1733016501394000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPjKwNrzgooDFQAAAAAdAAAAABAQ" target="_blank">
+            <img src="https://images.adsttc.com/media/images/6013/8f05/f91c/8125/1500/02d2/large_jpg/Roby_Salao_Beleza-3774.jpg?1611894525" alt="Foto do salão 2">
+        </a>
     </section>
 
     <footer>
